@@ -1,6 +1,8 @@
+import { CallTracker } from "assert";
 import Head from "next/head";
 import Link from "next/link";
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
+import { Store } from "../utils/Store";
 
 interface props {
     title: string;
@@ -8,6 +10,8 @@ interface props {
 }
 
 const Layout = ({ title, children }: props) => {
+    const { state, dispatch } = useContext(Store);
+    const { cart } = state;
     return (
         <>
             <Head>
@@ -23,7 +27,14 @@ const Layout = ({ title, children }: props) => {
                         </Link>
                         <div>
                             <Link href="/cart">
-                                <a className="p-2">Cart</a>
+                                <a className="p-2">
+                                    Cart
+                                    {cart.cartItems.length > 0 && (
+                                        <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                                            {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                                        </span>
+                                    )}
+                                </a>
                             </Link>
                             <Link href="/login">
                                 <a className="p-2">Login</a>
