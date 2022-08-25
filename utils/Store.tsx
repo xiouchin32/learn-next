@@ -1,5 +1,6 @@
 import React, { Dispatch } from "react";
 import { createContext, useReducer } from "react";
+import Cookies from "js-cookie";
 
 export type ActionMap<M extends { [index: string]: any }> = {
     [Key in keyof M]: M[Key] extends undefined
@@ -43,9 +44,7 @@ type ActionPayload = {
 export type StoreAction = ActionMap<ActionPayload>[keyof ActionMap<ActionPayload>];
 
 const initialState: { cart: { cartItems: productInfo[] } } = {
-    cart: {
-        cartItems: [],
-    },
+    cart: Cookies.get("cart") ? JSON.parse(Cookies.get("cart")!) : { cartItems: [] },
 };
 
 export const Store = createContext<{
@@ -66,10 +65,12 @@ export const reducer = (state: { cart: { cartItems: productInfo[] } }, action: S
             const cartItems = existItem
                 ? state.cart.cartItems.map((item) => (item.name === existItem.name ? newItem : item))
                 : [...state.cart.cartItems, newItem];
+            Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems }));
             return { ...state, cart: { ...state.cart, cartItems } };
         }
         case ProductCartInfoType.CART_REMOVE_ITEM: {
             const cartItems = state.cart.cartItems.filter((item) => item.slug !== action.payload.cartItems.slug);
+            Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems }));
             return { ...state, cart: { ...state.cart, cartItems } };
         }
 

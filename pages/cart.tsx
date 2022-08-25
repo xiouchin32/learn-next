@@ -5,6 +5,7 @@ import { ProductCartInfoType, productInfo, Store } from "../utils/Store";
 import Image from "next/image";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 
 const cart = () => {
     const router = useRouter();
@@ -109,4 +110,4 @@ const cart = () => {
     );
 };
 
-export default cart;
+export default dynamic(() => Promise.resolve(cart), { ssr: false });
