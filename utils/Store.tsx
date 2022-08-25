@@ -14,9 +14,10 @@ export type ActionMap<M extends { [index: string]: any }> = {
 
 export enum ProductCartInfoType {
     "CART_ADD_ITEM" = "CART_ADD_ITEM",
+    "CART_REMOVE_ITEM" = "CART_REMOVE_ITEM",
 }
 
-interface productInfo {
+export interface productInfo {
     name: string;
     slug: string;
     category: string;
@@ -34,6 +35,9 @@ type ActionPayload = {
     [ProductCartInfoType.CART_ADD_ITEM]: {
         cartItems: productInfo;
     };
+    [ProductCartInfoType.CART_REMOVE_ITEM]: {
+        cartItems: productInfo;
+    };
 };
 
 export type StoreAction = ActionMap<ActionPayload>[keyof ActionMap<ActionPayload>];
@@ -49,7 +53,7 @@ export const Store = createContext<{
         cart: { cartItems: productInfo[] };
     };
     dispatch: Dispatch<{
-        type: ProductCartInfoType.CART_ADD_ITEM;
+        type: ProductCartInfoType.CART_ADD_ITEM | ProductCartInfoType.CART_REMOVE_ITEM;
         payload: any;
     }>;
 }>({ state: initialState, dispatch: () => null });
@@ -62,6 +66,10 @@ export const reducer = (state: { cart: { cartItems: productInfo[] } }, action: S
             const cartItems = existItem
                 ? state.cart.cartItems.map((item) => (item.name === existItem.name ? newItem : item))
                 : [...state.cart.cartItems, newItem];
+            return { ...state, cart: { ...state.cart, cartItems } };
+        }
+        case ProductCartInfoType.CART_REMOVE_ITEM: {
+            const cartItems = state.cart.cartItems.filter((item) => item.slug !== action.payload.cartItems.slug);
             return { ...state, cart: { ...state.cart, cartItems } };
         }
         default:
