@@ -72,6 +72,7 @@ export const reducer = (state: { cart: { cartItems: productInfo[] } }, action: S
             const cartItems = state.cart.cartItems.filter((item) => item.slug !== action.payload.cartItems.slug);
             return { ...state, cart: { ...state.cart, cartItems } };
         }
+
         default:
             return state;
     }

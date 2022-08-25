@@ -20,6 +20,13 @@ const cart = () => {
         });
     };
 
+    const updateCartHandler = (item: productInfo, value: string) => {
+        dispatch({
+            type: ProductCartInfoType.CART_ADD_ITEM,
+            payload: { cartItems: { ...item, quantity: parseInt(value) } },
+        });
+    };
+
     return (
         <Layout title="Shopping Cart">
             <>
@@ -58,7 +65,16 @@ const cart = () => {
                                                         </a>
                                                     </Link>
                                                 </td>
-                                                <td className="p-5 text-right">{item.quantity}</td>
+                                                <td className="p-5 text-right">
+                                                    <select
+                                                        value={item.quantity}
+                                                        onChange={(e) => updateCartHandler(item, e.target.value)}
+                                                    >
+                                                        {[...Array.from(Array(item.countInStock).keys())].map((x) => (
+                                                            <option key={x + 1}>{x + 1}</option>
+                                                        ))}
+                                                    </select>
+                                                </td>
                                                 <td className="p-5 text-right">${item.price}</td>
                                                 <td className="p-5 text-center">
                                                     <button onClick={() => removeItemHandler(item)}>
