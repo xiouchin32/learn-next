@@ -13,10 +13,10 @@ const Layout = ({ title, children }: props) => {
     const { state, dispatch } = useContext(Store);
     const { cart } = state;
 
-    const [cartItemsCount, setcartItemsCount] = useState(0);
+    const [cartItemsCount, setCartItemsCount] = useState(0);
 
     useEffect(() => {
-        setcartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+        setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
     }, [cart.cartItems]);
 
     return (
